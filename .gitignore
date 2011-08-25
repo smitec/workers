@@ -1,6 +1,6 @@
 #ignore everything in the build folder
-build/
-mathpack-xcode/
+bin/
+workers-xcode/
 docs/
 *~
 
