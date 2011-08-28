@@ -7,6 +7,8 @@
 
 using namespace std;
 
+double threadCompare(int numThreads);
+
 class testWorker: public Worker
 {
 public:
@@ -81,31 +83,7 @@ double threadCompare(int numThreads) {
 
 int main()
 {
-    int bins[40];
-    for (int i = 0; i < 40; i++) {
-        bins[i] = 0;
-    }
-    double temp, temptwo;
-    int fastest;
-    for (int j = 0; j < 500; j++) {
-        if (j%(500/100) == 0) { std::cout << ".";}
-        temp = 0;
-        fastest = -1;
-        for (int i = 2; i <= 40; i++){
-            temptwo = threadCompare(i);
-            if (temptwo > temp) {
-                temp = temptwo;
-                fastest = i;
-            }
-        }
-        bins[fastest]++;
-    }
-    ofstream output;
-    output.open("results.txt", ios::out);
-    for (int i = 0; i < 40; i++) {
-        output << bins[i] << "\n";
-    }
-    output.close();
+    threadCompare(2);
 
     return 0;
 }

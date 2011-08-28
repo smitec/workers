@@ -1,7 +1,7 @@
 #ifndef MASTER_H
 #define MASTER_H
 #include "Worker.h"
-#include <windows.h> //for threads
+#include <pthread.h>
 
 /*
 Master starts and the tread is running until it is killed.
@@ -10,7 +10,8 @@ After the task is collected it waits again for a new Worker
 Masters are designed to remove thread overhead
 */
 
-DWORD WINAPI master_thread(LPVOID masterPtr);
+void* master_thread(void* masterPtr);
+
 
 class master
 {
@@ -29,8 +30,7 @@ class master
         bool killMe;
         bool pending;
         bool jobCollected;
-        HANDLE threadHandle;
-        LPDWORD threadID;
+        pthread_t threadID;
 
     protected:
     private:

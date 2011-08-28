@@ -24,12 +24,12 @@ bool master::assign_worker(Worker* newWorker, bool nohang){
 }
 
 void master::start_master(){
-    LPDWORD temp = 0;
+    pthread_t temp = 0;
     this->busy = false;
     this->jobCollected = false;
     this->pending = false;
     this->killMe = false;
-    this->threadHandle = CreateThread(NULL, 0, master_thread, (LPVOID)this, 0, temp);
+    pthread_create(&temp, NULL, master_thread, (void*)this);//CreateThread(NULL, 0, worker_thread, (void*)this, 0, &temp);
     this->threadID = temp;
 }
 
@@ -37,7 +37,7 @@ void master::kill(){
     this->killMe = true;
 }
 
-DWORD WINAPI master_thread(LPVOID masterPtr)
+void* master_thread(void* masterPtr)
 {
     master* theMaster = (master*)masterPtr;
     while(!theMaster->killMe){

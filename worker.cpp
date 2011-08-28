@@ -23,10 +23,10 @@ Worker::~Worker()
 void Worker::start_worker(void* arg)
 {
     this->arg = arg;
-    LPDWORD temp = 0;
+    pthread_t temp = 0;
     this->collected = false;
     this->finished = false;
-    this->threadHandle = CreateThread(NULL, 0, worker_thread, (LPVOID)this, 0, temp);
+    pthread_create(&temp, NULL, worker_thread, (void*)this);//CreateThread(NULL, 0, worker_thread, (void*)this, 0, &temp);
     this->threadID = temp;
 
 }
@@ -61,7 +61,7 @@ void Worker::work()
 {
     /*default behavious just return the arg as an int, essentially useless
     but can be used to test if the Worker is creating itself properly*/
-    int i = (int)this->arg;
+    int i = *(int*)this->arg;
     this->result = (void*)i;
     this->finished = true;
 }
@@ -73,9 +73,9 @@ void Worker::work()
     \arg the Worker which is to be run
 
 */
-DWORD WINAPI worker_thread(LPVOID toWork)
+void* worker_thread(void* worker)
 {
-    Worker* myWorker = (Worker*)toWork;
+    Worker *myWorker = (Worker*)worker;
     myWorker->work();
     return 0;
 }
