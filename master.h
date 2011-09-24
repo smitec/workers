@@ -19,7 +19,7 @@ class master
         master();
         virtual ~master();
 
-        bool assign_worker(Worker* newWorker, bool nohang);
+        bool assign_worker(Worker* newWorker, bool noHang);
         void start_master();
 
         void kill();

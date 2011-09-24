@@ -1,7 +1,6 @@
 #include "Master.h"
 
-master::master()
-{
+master::master() {
     this->busy = false;
     this->jobCollected = false;
     this->pending = false;
@@ -9,13 +8,12 @@ master::master()
     this->currentJob = NULL;
 }
 
-master::~master()
-{
+master::~master() {
     //dtor
 }
 
-bool master::assign_worker(Worker* newWorker, bool nohang){
-    if (nohang && this->busy) return false;
+bool master::assign_worker(Worker* newWorker, bool noHang) {
+    if (noHang && this->busy) return false;
     while(this->busy && !this->pending);
     this->pending = true; //Mutex This
     this->currentJob = newWorker;
@@ -23,7 +21,7 @@ bool master::assign_worker(Worker* newWorker, bool nohang){
     return true;
 }
 
-void master::start_master(){
+void master::start_master() {
     pthread_t temp = 0;
     this->busy = false;
     this->jobCollected = false;
@@ -33,7 +31,7 @@ void master::start_master(){
     this->threadID = temp;
 }
 
-void master::kill(){
+void master::kill() {
     this->killMe = true;
 }
 

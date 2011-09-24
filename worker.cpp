@@ -5,6 +5,9 @@
 Worker::Worker()
 {
     //ctor
+    this->finished = false;
+    this->arg = 0;
+    this->result = 0;
 }
 
 /** Empty deconstructor
@@ -27,6 +30,7 @@ void Worker::start_worker(void* arg)
     this->collected = false;
     this->finished = false;
     pthread_create(&temp, NULL, worker_thread, (void*)this);//CreateThread(NULL, 0, worker_thread, (void*)this, 0, &temp);
+    pthread_detach(temp);
     this->threadID = temp;
 
 }
@@ -59,10 +63,9 @@ void* Worker::get_result()
 */
 void Worker::work()
 {
-    /*default behavious just return the arg as an int, essentially useless
+    /*default behavious just return the arg, essentially useless
     but can be used to test if the Worker is creating itself properly*/
-    int i = *(int*)this->arg;
-    this->result = (void*)i;
+    this->result = this->arg;
     this->finished = true;
 }
 
