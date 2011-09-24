@@ -13,7 +13,9 @@ master::~master() {
 }
 
 bool master::assign_worker(Worker* newWorker, bool noHang) {
-    if (noHang && this->busy) return false;
+    if (noHang && this->busy) {
+        return false;
+    }
     while(this->busy && !this->pending);
     this->pending = true; //Mutex This
     this->currentJob = newWorker;
@@ -27,7 +29,7 @@ void master::start_master() {
     this->jobCollected = false;
     this->pending = false;
     this->killMe = false;
-    pthread_create(&temp, NULL, master_thread, (void*)this);//CreateThread(NULL, 0, worker_thread, (void*)this, 0, &temp);
+    pthread_create(&temp, NULL, master_thread, (void*)this);
     this->threadID = temp;
 }
 

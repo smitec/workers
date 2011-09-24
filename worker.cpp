@@ -8,6 +8,7 @@ Worker::Worker()
     this->finished = false;
     this->arg = 0;
     this->result = 0;
+    this->ready = true;
 }
 
 /** Empty deconstructor
@@ -20,11 +21,14 @@ Worker::~Worker()
 /** sets up the Worker and creates it's thread
     Worker now runs its process in the background
     \arg void* to be cast within work function
-    arg may become a vector of void* so that multiple
-    args can be sent to the Worker function
 */
-void Worker::start_worker(void* arg)
+//TODO add nohang and bool return
+bool Worker::start_worker(void* arg, bool nohang)
 {
+    if (!this->ready && nohang) {
+        return false;
+    }
+    while (!this->ready); //wait until the worker is ready so we cant start it twice while its running
     this->arg = arg;
     pthread_t temp = 0;
     this->collected = false;
@@ -32,7 +36,7 @@ void Worker::start_worker(void* arg)
     pthread_create(&temp, NULL, worker_thread, (void*)this);//CreateThread(NULL, 0, worker_thread, (void*)this, 0, &temp);
     pthread_detach(temp);
     this->threadID = temp;
-
+    return true;
 }
 
 /** checks if the Worker has finished processing
@@ -55,6 +59,7 @@ void* Worker::get_result()
 {
     while(!this->finished);
     this->collected = true;
+    this->ready = true;
     return this->result;
 }
 
